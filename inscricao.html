@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscrição | Colônia de Férias No Lugar do Outro</title>
+  <meta name="description" content="Formulário de inscrição para a Colônia de Férias No Lugar do Outro." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="registration-page">
+    <a class="back-link" href="index.html#inscricoes">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Voltar para o site
+    </a>
+
+    <section class="registration-panel registration-page-panel" id="formulario-inscricao">
+      <div class="registration-intro">
+        <span class="form-kicker">Ficha de inscrição</span>
+        <h1>Inscrição do 1º lote</h1>
+               <p class="required-note">Preencha os dados da criança e do responsável.</p>
+      </div>
+
+      <form class="registration-form" id="registrationForm">
+        <input type="hidden" name="lote" value="1º lote" />
+
+        <div class="form-field">
+          <label for="childName">Nome da criança</label>
+          <input id="childName" name="nome_crianca" type="text" autocomplete="name" required />
+        </div>
+
+        <div class="form-field">
+          <label for="childAge">Idade</label>
+          <input id="childAge" name="idade" type="number" min="4" max="12" required />
+        </div>
+
+        <div class="form-field">
+          <label for="guardianName">Nome do responsável</label>
+          <input id="guardianName" name="nome_responsavel" type="text" autocomplete="name" required />
+        </div>
+
+        <div class="form-field">
+          <label for="guardianPhone">WhatsApp do responsável</label>
+          <input id="guardianPhone" name="whatsapp" type="tel" autocomplete="tel" placeholder="(45) 99999-9999" required />
+        </div>
+
+        <div class="form-field">
+          <label for="invitedBy">Igreja ou convidado de quem?</label>
+          <input id="invitedBy" name="convidado_por" type="text" placeholder="Ex: PIB, familiar, amigo..." required />
+        </div>
+
+        <div class="form-field">
+          <label for="foodRestriction">Alergia ou restrição alimentar?</label>
+          <input id="foodRestriction" name="restricao_alimentar" type="text" placeholder="Se não tiver, escreva nenhuma" required />
+        </div>
+
+        <div class="form-field full-field">
+          <label for="notes">Observações importantes</label>
+          <textarea id="notes" name="observacoes" rows="3" placeholder="Medicamentos, necessidades especiais ou algo que a equipe precise saber"></textarea>
+        </div>
+
+        <label class="form-check full-field">
+          <input name="autorizacao" type="checkbox" value="Sim" required />
+          <span>Confirmo que sou responsável pela criança e autorizo a participação na Colônia de Férias.</span>
+        </label>
+
+        <div class="form-actions full-field">
+          <button class="btn btn-red" type="submit">Enviar inscrição</button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <div class="success-modal" id="successModal" aria-hidden="true">
+    <div class="success-modal__backdrop" data-close-success-modal></div>
+    <div class="success-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+      <div class="success-modal__icon">✓</div>
+      <h2 id="successModalTitle">Inscrição enviada!</h2>
+      <p>Em breve a secretaria da igreja entrará em contato para confirmar a inscrição.</p>
+      <div class="success-modal__actions">
+        <button class="btn btn-light" type="button" data-close-success-modal>Ok</button>
+        <a class="btn btn-red" id="successWhatsAppLink" href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Acabei%20de%20enviar%20a%20inscri%C3%A7%C3%A3o%20da%20Col%C3%B4nia%20de%20F%C3%A9rias%20e%20gostaria%20de%20confirmar." target="_blank" rel="noopener">Chamar no WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
