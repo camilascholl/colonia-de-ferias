@@ -13,20 +13,45 @@ if (menuButton && navLinks) {
   });
 }
 
-const GOOGLE_SCRIPT_URL = '';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxhTYEZRpXjTzFlRX6tsjdly_UXDiCl-VqpSMIM4af_rh5aSgFLeQE9zJfnTKT49RoaBA/exec';
 const CHURCH_WHATSAPP_URL = 'https://wa.me/5500000000000';
+const STONE_PAYMENT_URL = 'https://payment-link-v3.ton.com.br/pl_ngY1o3LRPwy8lpVInwFDBEVD9MpjWmGb';
 const registrationForm = document.getElementById('registrationForm');
 const formStatus = document.getElementById('formStatus');
 const successModal = document.getElementById('successModal');
 const successWhatsAppLink = document.getElementById('successWhatsAppLink');
+const stonePaymentLink = document.getElementById('stonePaymentLink');
+const registrationIdInput = document.getElementById('registrationId');
+const successRegistrationId = document.getElementById('successRegistrationId');
 
-function openSuccessModal(childName) {
+function generateRegistrationId() {
+  const datePart = new Date().toISOString().slice(0, 10).replaceAll('-', '');
+  const values = new Uint32Array(2);
+  crypto.getRandomValues(values);
+  const randomPart = Array.from(values, (value) => value.toString(36).toUpperCase().padStart(7, '0'))
+    .join('')
+    .slice(0, 8);
+
+  return `COL-${datePart}-${randomPart}`;
+}
+
+function openSuccessModal(childName, registrationId) {
   if (!successModal) return;
 
+  if (stonePaymentLink && STONE_PAYMENT_URL) {
+    stonePaymentLink.href = STONE_PAYMENT_URL;
+    stonePaymentLink.classList.remove('is-hidden');
+  }
+
+  if (successRegistrationId) {
+    successRegistrationId.textContent = registrationId || '';
+  }
+
   if (successWhatsAppLink) {
+    const paymentText = STONE_PAYMENT_URL ? ` Link para pagamento: ${STONE_PAYMENT_URL}` : '';
     const message = childName
-      ? `Olá! Acabei de enviar a inscrição de ${childName} na Colônia de Férias e gostaria de confirmar.`
-      : 'Olá! Acabei de enviar a inscrição da Colônia de Férias e gostaria de confirmar.';
+      ? `Olá! Acabei de enviar a inscrição de ${childName} na Colônia de Férias. Código: ${registrationId}. Quero enviar o comprovante de pagamento.${paymentText}`
+      : `Olá! Acabei de enviar a inscrição da Colônia de Férias. Código: ${registrationId}. Quero enviar o comprovante de pagamento.${paymentText}`;
 
     successWhatsAppLink.href = `${CHURCH_WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
   }
@@ -74,6 +99,14 @@ if (registrationForm) {
     const submitButton = registrationForm.querySelector('button[type="submit"]');
     const formData = new FormData(registrationForm);
     const childName = String(formData.get('nome_crianca') || '').trim();
+    const registrationId = generateRegistrationId();
+
+    if (registrationIdInput) {
+      registrationIdInput.value = registrationId;
+    }
+
+    formData.set('inscricao_id', registrationId);
+    formData.set('link_pagamento', STONE_PAYMENT_URL);
     formData.append('enviado_em', new Date().toLocaleString('pt-BR'));
 
     submitButton.disabled = true;
@@ -90,7 +123,7 @@ if (registrationForm) {
       registrationForm.reset();
       formStatus.textContent = '';
       formStatus.className = 'form-status';
-      openSuccessModal(childName);
+      openSuccessModal(childName, registrationId);
     } catch (error) {
       formStatus.textContent = 'Não foi possível enviar agora. Tente novamente em instantes.';
       formStatus.className = 'form-status error';

@@ -11,6 +11,8 @@ const HEADERS = [
   'Restrição alimentar',
   'Observações',
   'Autorização',
+  'ID da inscrição',
+  'Link de pagamento',
 ];
 
 function doPost(event) {
@@ -30,6 +32,8 @@ function doPost(event) {
     data.restricao_alimentar || '',
     data.observacoes || '',
     data.autorizacao || '',
+    data.inscricao_id || '',
+    data.link_pagamento || '',
   ]);
 
   return ContentService
@@ -49,7 +53,19 @@ function getSheet() {
 }
 
 function ensureHeaders(sheet) {
-  if (sheet.getLastRow() > 0) return;
+  if (sheet.getLastRow() > 0) {
+    const currentHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const missingHeaders = HEADERS.filter((header) => !currentHeaders.includes(header));
+
+    if (missingHeaders.length > 0) {
+      sheet
+        .getRange(1, currentHeaders.length + 1, 1, missingHeaders.length)
+        .setValues([missingHeaders])
+        .setFontWeight('bold');
+    }
+
+    return;
+  }
 
   sheet.appendRow(HEADERS);
   sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
