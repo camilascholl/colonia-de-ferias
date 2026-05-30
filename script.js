@@ -25,14 +25,11 @@ const registrationIdInput = document.getElementById('registrationId');
 const successRegistrationId = document.getElementById('successRegistrationId');
 
 function generateRegistrationId() {
-  const datePart = new Date().toISOString().slice(0, 10).replaceAll('-', '');
-  const values = new Uint32Array(2);
+  const values = new Uint32Array(1);
   crypto.getRandomValues(values);
-  const randomPart = Array.from(values, (value) => value.toString(36).toUpperCase().padStart(7, '0'))
-    .join('')
-    .slice(0, 8);
+  const randomPart = values[0].toString(36).toUpperCase().padStart(6, '0').slice(0, 6);
 
-  return `COL-${datePart}-${randomPart}`;
+  return `COL-${randomPart}`;
 }
 
 function openSuccessModal(childName, registrationId) {
